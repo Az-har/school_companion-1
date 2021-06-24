@@ -1,0 +1,31 @@
+{
+  "name": "school_companion",
+  "version": "1.0.0",
+  "description": "A open source project to help schools and colleges to maintain their students, teachers and employees with ease.",
+  "main": "index.js",
+  "scripts": {
+    "prisma-introspect": "env-cmd -f ./config/dev.env -- npx prisma introspect",
+    "prisma-dev-migrate": "env-cmd -f ./config/dev.env -- npx prisma migrate dev --name {name of the migration}",
+    "prisma-dev-push": "env-cmd -f ./config/dev.env -- npx prisma db push",
+    "prisma-test-push": "env-cmd -f ./config/test.env -- npx prisma db push",
+    "prisma-prod-deploy": "env-cmd -f ./config/prod.env -- npx prisma migrate deploy",
+
+    "dev": "env-cmd -f ./config/dev.env ts-node-dev --respawn src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^2.25.0",
+    "apollo-server": "^2.25.1",
+    "env-cmd": "^10.1.0",
+    "graphql": "^15.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.4",
+    "prisma": "^2.25.0",
+    "ts-node": "^10.0.0",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.3.4"
+  }
+}

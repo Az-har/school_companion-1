@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id       String     @id
+  name     String
+  email    String     @unique
+  password String
+  bioData  Json
+  classId  String?
+  class    Class?     @relation(fields: [classId], references: [id])
+  teachers Employee[]
+  subjects Subject[]
+}
+
+model Employee {
+  id        String       @id
+  name      String
+  email     String       @unique
+  password  String
+  bioData   Json?
+  role      EmployeeRole @default(Teacher)
+  subjectId String?
+  Subject   Subject?     @relation(fields: [subjectId], references: [id])
+  Class     Class[]
+  Student   Student[]
+}
+
+model Admin {
+  id       String @id
+  email    String @unique
+  password String
+}
+
+model Subject {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String
+  teachers    Employee[]
+  students    Student[]
+}
+
+model Class {
+  id       String     @id @default(cuid())
+  name     String
+  section  String
+  students Student[]
+  teachers Employee[]
+
+  @@unique([name, section], name: "Class.name_section_unique")
+  @@index([name, section], name: "Class.name_section_index")
+}
+
+enum EmployeeRole {
+  Teacher
+  Staff
+}
