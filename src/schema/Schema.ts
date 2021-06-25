@@ -17,15 +17,11 @@ export default gql`
     name: String!
     email: String!
     bioData: String
-    role: String!
+    role: Role!
 
     subject: Subject
     class: [Class]
     students: [Student]
-  }
-
-  type Admin {
-    email: String
   }
 
   type Subject {
@@ -44,5 +40,11 @@ export default gql`
 
     students: [Student]
     teachers: [Employee]
+  }
+
+  enum Role {
+    Staff
+    Teacher
+    Admin
   }
 `;

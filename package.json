@@ -9,7 +9,7 @@
     "prisma-dev-push": "env-cmd -f ./config/dev.env -- npx prisma db push",
     "prisma-test-push": "env-cmd -f ./config/test.env -- npx prisma db push",
     "prisma-prod-deploy": "env-cmd -f ./config/prod.env -- npx prisma migrate deploy",
-
+    "prisma-studio": "env-cmd -f ./config/dev.env -- npx prisma studio",
     "dev": "env-cmd -f ./config/dev.env ts-node-dev --respawn src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
