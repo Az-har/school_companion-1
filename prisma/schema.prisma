@@ -15,32 +15,34 @@ model Student {
   id       String @id
   name     String
   email    String @unique
+  /// @TypeGraphQL.omit(output: true)
   password String
   bioData  Json
 
-  ClassSection ClassSection? @relation(fields: [classSectionId], references: [id])
+  GroupSection GroupSection? @relation(fields: [GroupSectionId], references: [id])
   teachers     Employee[]
   subjects     Subject[]
 
-  className      String?
+  GroupName      String?
   sectionName    String?
-  classSectionId String?
+  GroupSectionId String?
 }
 
 model Employee {
   id       String       @id
   name     String
   email    String       @unique
+  /// @TypeGraphQL.omit(output: true)
   password String
   bioData  Json?
   role     EmployeeRole @default(Teacher)
 
   Subject      Subject?       @relation(fields: [subjectId], references: [id])
   Student      Student[]
-  ClassSection ClassSection[]
+  groupSection GroupSection[]
 
   subjectId      String?
-  classSectionId String?
+  groupSectionId String?
 }
 
 model Subject {
@@ -57,28 +59,28 @@ model Group {
   name String @unique
 
   section      Section[]
-  classSection ClassSection[]
+  groupSection GroupSection[]
 }
 
 model Section {
   id   String @id @default(cuid())
   name String @unique
 
-  class        Group          @relation(fields: [className], references: [name])
-  classSection ClassSection[]
+  group        Group          @relation(fields: [groupName], references: [name])
+  groupSection GroupSection[]
 
-  className String
+  groupName String
 }
 
-model ClassSection {
+model GroupSection {
   id String @id @default(cuid())
 
-  class    Group      @relation(fields: [className], references: [name])
+  group    Group      @relation(fields: [groupName], references: [name])
   section  Section    @relation(fields: [sectionName], references: [name])
   students Student[]
   teachers Employee[]
 
-  className   String
+  groupName   String
   sectionName String
 }
 
