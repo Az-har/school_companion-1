@@ -2,34 +2,45 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Student {
-  id       String     @id
+  id       String @id
   name     String
-  email    String     @unique
+  email    String @unique
   password String
   bioData  Json
-  classId  String?
-  class    Class?     @relation(fields: [classId], references: [id])
-  teachers Employee[]
-  subjects Subject[]
+
+  ClassSection ClassSection? @relation(fields: [classSectionId], references: [id])
+  teachers     Employee[]
+  subjects     Subject[]
+
+  className      String?
+  sectionName    String?
+  classSectionId String?
 }
 
 model Employee {
-  id        String       @id
-  name      String
-  email     String       @unique
-  password  String
-  bioData   Json?
-  role      EmployeeRole @default(Teacher)
-  subjectId String?
-  Subject   Subject?     @relation(fields: [subjectId], references: [id])
-  Class     Class[]
-  Student   Student[]
+  id       String       @id
+  name     String
+  email    String       @unique
+  password String
+  bioData  Json?
+  role     EmployeeRole @default(Teacher)
+
+  Subject      Subject?       @relation(fields: [subjectId], references: [id])
+  Student      Student[]
+  ClassSection ClassSection[]
+
+  subjectId      String?
+  classSectionId String?
 }
 
 model Subject {
@@ -41,15 +52,34 @@ model Subject {
   students Student[]
 }
 
-model Class {
-  id       String     @id @default(cuid())
-  name     String
-  section  String
+model Group {
+  id   String @id @default(cuid())
+  name String @unique
+
+  section      Section[]
+  classSection ClassSection[]
+}
+
+model Section {
+  id   String @id @default(cuid())
+  name String @unique
+
+  class        Group          @relation(fields: [className], references: [name])
+  classSection ClassSection[]
+
+  className String
+}
+
+model ClassSection {
+  id String @id @default(cuid())
+
+  class    Group      @relation(fields: [className], references: [name])
+  section  Section    @relation(fields: [sectionName], references: [name])
   students Student[]
   teachers Employee[]
 
-  @@unique([name, section], name: "Class.name_section_unique")
-  @@index([name, section], name: "Class.name_section_index")
+  className   String
+  sectionName String
 }
 
 enum EmployeeRole {

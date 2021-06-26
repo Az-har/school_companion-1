@@ -1,28 +1,21 @@
 import { ApolloServer } from "apollo-server";
 import { PrismaClient } from ".prisma/client";
+import * as tg from "type-graphql";
+import { resolvers } from "@generated/type-graphql";
 
-//resolvers
-import Query from "./resolvers/Query";
+const server = async () => {
+  const prisma: PrismaClient = new PrismaClient();
 
-//typeDefs
-import query from "./schema/Query";
-import mutation from "./schema/Mutation";
-import schema from "./schema/Schema";
+  const schema = await tg.buildSchema({ resolvers: resolvers });
 
-const prisma: PrismaClient = new PrismaClient();
+  return new ApolloServer({
+    schema,
+    context: ({ req }) => {
+      const token: String = req.headers.authorization || "";
 
-const typeDefs = [schema, query, mutation];
-
-const resolvers = { Query };
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: ({ req }) => {
-    const token: String = req.headers.authorization || "";
-
-    return { prisma, token };
-  },
-});
+      return { prisma, token };
+    },
+  });
+};
 
 export default server;
