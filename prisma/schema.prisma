@@ -11,21 +11,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Collage {
+  id          String  @id @default(cuid())
+  name        String
+  /// @TypeGraphQL.omit(output: true)
+  email       String  @unique
+  /// @TypeGraphQL.omit(output: true)
+  password    String
+  description String?
+
+  students  Student[]
+  employees Employee[]
+}
+
 model Student {
   id       String @id
   name     String
   email    String @unique
   /// @TypeGraphQL.omit(output: true)
   password String
-  bioData  Json
+  bioData  Json?
 
   GroupSection GroupSection? @relation(fields: [GroupSectionId], references: [id])
+  Collage      Collage       @relation(fields: [collageId], references: [id])
   teachers     Employee[]
   subjects     Subject[]
 
   GroupName      String?
   sectionName    String?
   GroupSectionId String?
+  collageId      String
 }
 
 model Employee {
@@ -37,12 +52,14 @@ model Employee {
   bioData  Json?
   role     EmployeeRole @default(Teacher)
 
+  Collage      Collage        @relation(fields: [collageId], references: [id])
   Subject      Subject?       @relation(fields: [subjectId], references: [id])
   Student      Student[]
   groupSection GroupSection[]
 
   subjectId      String?
   groupSectionId String?
+  collageId      String
 }
 
 model Subject {
@@ -58,7 +75,6 @@ model Group {
   id   String @id @default(cuid())
   name String @unique
 
-  section      Section[]
   groupSection GroupSection[]
 }
 
@@ -66,10 +82,7 @@ model Section {
   id   String @id @default(cuid())
   name String @unique
 
-  group        Group          @relation(fields: [groupName], references: [name])
-  groupSection GroupSection[]
-
-  groupName String
+  groupSection GroupSection?
 }
 
 model GroupSection {
@@ -87,5 +100,4 @@ model GroupSection {
 enum EmployeeRole {
   Teacher
   Staff
-  Admin
 }

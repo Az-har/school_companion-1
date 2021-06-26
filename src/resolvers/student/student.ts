@@ -1,9 +1,9 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Student, StudentCreateInput } from "@generated/type-graphql";
-import { Context } from "../../../context";
+import { Context } from "../../context";
 
 @Resolver()
-export class RegisterResolver {
+export class StudentResolver {
   @Query(() => [Student])
   async students(@Ctx() { prisma }: Context): Promise<[Student]> {
     return (await prisma.student.findMany()) as [Student];

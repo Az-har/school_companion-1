@@ -1,19 +1,24 @@
 import { ApolloServer } from "apollo-server";
 import { PrismaClient } from ".prisma/client";
+import * as bcrypt from "bcryptjs";
 import * as tg from "type-graphql";
-import { RegisterResolver } from "./modules/user/register/Register";
+
+import { StudentResolver } from "./resolvers/student/student";
 
 const server = async () => {
   const prisma: PrismaClient = new PrismaClient();
 
-  const schema = await tg.buildSchema({ resolvers: [RegisterResolver] });
+  const schema = await tg.buildSchema({ resolvers: [StudentResolver] });
 
   return new ApolloServer({
     schema,
-    context: ({ req }) => {
+    context: async ({ req }) => {
       const token: String = req.headers.authorization || "";
 
-      return { prisma, token };
+      if (token != "") {
+      } else {
+        return { prisma, token };
+      }
     },
   });
 };
