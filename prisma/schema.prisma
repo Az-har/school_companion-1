@@ -14,14 +14,22 @@ datasource db {
 model Collage {
   id          String  @id @default(cuid())
   name        String
-  /// @TypeGraphQL.omit(output: true)
-  email       String  @unique
-  /// @TypeGraphQL.omit(output: true)
-  password    String
   description String?
 
+  admin     Admin[]
   students  Student[]
   employees Employee[]
+}
+
+model Admin {
+  id       String @id @default(cuid())
+  email    String @unique
+  /// @TypeGraphQL.omit(output: true)
+  password String
+
+  collage Collage @relation(fields: [collageId], references: [id])
+
+  collageId String
 }
 
 model Student {
