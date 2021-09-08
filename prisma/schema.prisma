@@ -40,17 +40,17 @@ model Employee {
   name      String?
   email     String   @unique
   bio_pic   String?
-  password  String
+  password  String   @default("NULL")
   role      Role
-  bio       Json?
+  bio_data  Json?
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   school    School    @relation(fields: [schoolId], references: [id])
   schoolId  String
-  subject   Subject   @relation(fields: [subjectId], references: [id])
-  subjectId String
+  subject   Subject?  @relation(fields: [subjectId], references: [id])
+  subjectId String?
   students  Student[]
   sections  Section[]
 }
@@ -61,7 +61,7 @@ model Student {
   email     String   @unique
   bio_pic   String?
   password  String
-  bio       Json?
+  bio_data  Json?
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

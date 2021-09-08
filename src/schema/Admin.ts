@@ -4,8 +4,9 @@ export default gql`
   type Admin {
     id: ID!
     email: String!
-    school: School!
     verified: Boolean!
+    school: School
+    schools: [School!]
   }
 
   input LoginOrSignUpAdminInput {

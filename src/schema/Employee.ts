@@ -5,12 +5,25 @@ export default gql`
     id: ID!
     name: String!
     email: String!
-    bio: JSON!
-    bio_pic: String!
+    bio_data: JSON
+    bio_pic: String
     role: String!
     subject: Subject!
     school: School!
     students: [Student!]
     sections: [Section!]
+  }
+
+  input CreateEmployeeInput {
+    name: String!
+    email: String!
+    bio_data: JSON
+    bio_pic: String
+    role: EmployeeRole!
+  }
+
+  enum EmployeeRole {
+    EMPLOYEE
+    TEACHER
   }
 `;

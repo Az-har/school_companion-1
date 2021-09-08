@@ -3,7 +3,7 @@ import { PrismaClient } from ".prisma/client";
 import express from "express";
 import http from "http";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-import { Context } from "./utils/Types";
+import { Context, User } from "./utils/types";
 import { verifyToken } from "./utils/token";
 import typeDefs from "./schema/schema";
 import resolvers from "./resolvers/resolvers";
@@ -19,16 +19,55 @@ const server = async () => {
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     context: async ({ req }): Promise<Context> => {
+      let user: User | undefined = undefined;
       const token: string = req.headers.authorization || "";
       if (token != "") {
         try {
-          const result = verifyToken(token.replace("Bearer ", ""));
-          return { prisma, userId: result };
+          const result = await verifyToken(token.replace("Bearer ", ""));
+          // checking user for admin
+          if (result["role"] === "ADMIN") {
+            const admin = await prisma.admin.findUnique({
+              where: { id: result["userId"] },
+              select: {
+                id: true,
+              },
+            });
+            user = {
+              id: admin!.id,
+              role: "ADMIN",
+              premission: undefined,
+            };
+          }
+          // checking user for employee or teacher
+          else if (result["role"] === "EMPLOYEE") {
+            const employee = await prisma.employee.findUnique({
+              where: { id: result["userId"] },
+            });
+            user = {
+              id: employee!.id,
+              role: employee!.role,
+              premission: undefined,
+            };
+          }
+          // checking user for student
+          else if (result["role"] === "STUDENT") {
+            const student = await prisma.student.findUnique({
+              where: { id: result["userId"] },
+            });
+            user = {
+              id: student!.id,
+              role: "STUDENT",
+              premission: undefined,
+            };
+          } else {
+            throw new ForbiddenError("Request denied");
+          }
+          return { prisma, user };
         } catch (e) {
           throw new ForbiddenError("Request denied");
         }
       } else {
-        return { prisma, userId: undefined };
+        return { prisma, user: undefined };
       }
     },
   });

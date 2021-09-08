@@ -1,9 +1,14 @@
 import { PrismaClient } from "@prisma/client";
-import { JwtPayload } from "jsonwebtoken";
 
 export interface Context {
   prisma: PrismaClient;
-  userId?: string | JwtPayload;
+  user?: User;
+}
+
+export interface User {
+  id: string;
+  role: "STUDENT" | "ADMIN" | "EMPLOYEE" | "TEACHER";
+  premission: {} | undefined;
 }
 
 export interface LoginOrSignUpAdminInput {

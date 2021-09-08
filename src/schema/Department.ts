@@ -6,4 +6,9 @@ export default gql`
     name: String!
     section: [Section!]!
   }
+
+  input CreateDepartmentInput {
+    name: String!
+    createSections: [String!]
+  }
 `;

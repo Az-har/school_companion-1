@@ -1,5 +1,5 @@
 import { resolve } from "path/posix";
-import server from "./Server";
+import server from "./server";
 
 server().then((apolloServer) => {
   apolloServer.listen({ port: process.env.PORT }, resolve);
