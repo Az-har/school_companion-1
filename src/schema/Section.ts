@@ -9,6 +9,6 @@ export default gql`
 
   input CreateSectionInput {
     name: String!
-    department: ID!
+    departmentId: String!
   }
 `;

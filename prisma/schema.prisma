@@ -60,7 +60,7 @@ model Student {
   name      String?
   email     String   @unique
   bio_pic   String?
-  password  String
+  password  String   @default("NULL")
   bio_data  Json?
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -68,8 +68,8 @@ model Student {
 
   school    School     @relation(fields: [schoolId], references: [id])
   schoolId  String
-  section   Section    @relation(fields: [sectionId], references: [id])
-  sectionId String
+  section   Section?   @relation(fields: [sectionId], references: [id])
+  sectionId String?
   teachers  Employee[]
   subjects  Subject[]
 }

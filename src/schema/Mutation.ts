@@ -3,16 +3,25 @@ import { gql } from "apollo-server-core";
 export default gql`
   type Mutation {
     # Admin
+
     signUpAdmin(data: LoginOrSignUpAdminInput!): AdminAuthPayload!
     loginAdmin(data: LoginOrSignUpAdminInput!): AdminAuthPayload!
     createSchool(data: CreateSchoolInput!): School!
+
     # Teacher, Employee & Admin
+
     createEmployee(data: CreateEmployeeInput!, schoolId: String!): Employee!
     createEmployees(data: [CreateEmployeeInput!]!, schoolId: String!): Int!
+
+    createStudent(data: CreateStudentInput!, schoolId: String!): Student!
+    createStudents(data: [CreateStudentInput!]!, schoolId: String!): Int!
+
     createDepartment(
       data: CreateDepartmentInput!
       schoolId: String!
     ): Department!
+
+    createSections(data: [CreateSectionInput!]!, schoolId: String!): Int!
 
     # Student
 

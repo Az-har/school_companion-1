@@ -10,4 +10,11 @@ export default gql`
     teachers: [Employee!]
     section: Section
   }
+
+  input CreateStudentInput {
+    name: String!
+    email: String!
+    bio_data: JSON
+    bio_pic: String
+  }
 `;

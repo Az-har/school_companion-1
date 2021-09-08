@@ -112,7 +112,6 @@ const Mutation = {
     try {
       const datasets: any = [];
       Object(args.data).forEach((data: any) => {
-        console.log(data[1]);
         const result = prismaDataValidator({
           args: data,
           many: true,
@@ -171,6 +170,74 @@ const Mutation = {
     } catch (e) {
       console.log(e);
       throw Error(e);
+    }
+  },
+
+  // Creating new Sections resolver
+  createSections: async (_parent: any, args: any, ctx: Context, _info: any) => {
+    try {
+      const datasets: any = [];
+      Object(args.data).forEach((data: any) => {
+        const result = prismaDataValidator({
+          args: data,
+          many: true,
+          connect: [{ name: "school", id: args.schoolId }],
+        });
+        datasets.push(result);
+      });
+      return ctx.prisma.section
+        .createMany({
+          data: datasets,
+          skipDuplicates: true,
+        })
+        .then((count) => count.count);
+    } catch (e) {
+      console.log(e);
+      throw Error(e);
+    }
+  },
+
+  // Creating new student reasolver
+  createStudent: async (_parent: any, args: any, ctx: Context, info: any) => {
+    try {
+      const data: any = prismaDataValidator({
+        many: false,
+        args: args.data,
+        connect: [{ name: "school", id: args.schoolId }],
+      });
+      const select = new PrismaSelect(info).value;
+      // creating new student
+      return await ctx.prisma.student.create({
+        ...data,
+        ...select,
+      });
+    } catch (e) {
+      console.log(e);
+      throw Error(e);
+    }
+  },
+
+  // Creating new students reasolver
+  createStudents: async (_parent: any, args: any, ctx: Context, _info: any) => {
+    try {
+      const datasets: any = [];
+      Object(args.data).forEach((data: any) => {
+        const result = prismaDataValidator({
+          args: data,
+          many: true,
+          connect: [{ name: "school", id: args.schoolId }],
+        });
+        datasets.push(result);
+      });
+      return ctx.prisma.student
+        .createMany({
+          data: datasets,
+          skipDuplicates: true,
+        })
+        .then((count) => count.count);
+    } catch (error) {
+      console.log(error);
+      throw Error(error);
     }
   },
 };
