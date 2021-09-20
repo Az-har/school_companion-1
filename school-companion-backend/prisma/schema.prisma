@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  school_logo String
+  about       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  admin   Admin  @relation(fields: [adminId], references: [id])
+  adminId String
+
+  students    Student[]
+  employees   Employee[]
+  subjects    Subject[]
+  departments Department[]
+  sections    Section[]
+}
+
+model Admin {
+  id       String  @id @default(cuid())
+  email    String  @unique
+  password String
+  verified Boolean @default(false)
+
+  schools School[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String  @unique
+  bio_data Json?
+  bio_pic  String?
+  password String  @default("NULL")
+  role     Role
+  verified Boolean @default(false)
+
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
+
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  subjectId String?
+
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId String
+
+  students           Student[]
+  sections           Section[]
+  studentAttendances StudentAttendance[]
+  examMarks          ExamMarks[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Student {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String  @unique
+  bicPic   String?
+  password String  @default("NULL")
+  bioData  Json?
+  verified Boolean @default(false)
+
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
+
+  section   Section? @relation(fields: [sectionId], references: [id])
+  sectionId String?
+
+  teachers    Employee[]
+  subjects    Subject[]
+  attendances StudentAttendance[]
+  examMarks   ExamMarks[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subject {
+  id   String @id @default(cuid())
+  name String @unique
+
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
+
+  student   Student[]
+  employees Employee[]
+  exams     Exam[]
+  examMarks ExamMarks[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Department {
+  id   String @id @default(cuid())
+  name String
+  year String
+
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
+
+  section Section[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, year])
+}
+
+model Section {
+  id   String @id @default(cuid())
+  name String @unique
+
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
+
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId String
+
+  Student    Student[]
+  teachers   Employee[]
+  attendance StudentAttendance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExamMarks {
+  id      String  @id @default(cuid())
+  marks   Float
+  present Boolean
+
+  exam   Exam   @relation(fields: [examId], references: [id])
+  examId String
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  teacher   Employee @relation(fields: [teacherId], references: [id])
+  teacherId String
+
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  subjectId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Exam {
+  id   String @id @default(cuid())
+  name String @unique
+
+  subjects  Subject[]
+  examMarks ExamMarks[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StudentAttendance {
+  id      String   @id @default(cuid())
+  date    DateTime @default(now())
+  present Boolean
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId String
+
+  teacher   Employee @relation(fields: [teacherId], references: [id])
+  teacherId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BioData {
+  id           String          @id @default(cuid())
+  bioData      Json
+  departmentId String
+  userRole     BioDataUserRole
+}
+
+model Permission {
+  id String @id @default(cuid())
+
+  employee Employee?
+}
+
+enum BioDataUserRole {
+  Student
+  EMPLOYEE
+}
+
+enum Role {
+  TEACHER
+  EMPLOYEE
+}
