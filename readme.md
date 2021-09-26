@@ -42,7 +42,7 @@ If you are developer who knows React JS to a reasonable level or Node JS with so
 ## What Will Be Made
 
 - Student Panel
-- School Admin Employee panel Based On Role
+- School,Admin,Employee panel
 
 
 [premkumar5012002/School-Companion](https://github.com/premkumar5012002/School-Companion)
