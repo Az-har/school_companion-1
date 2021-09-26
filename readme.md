@@ -20,21 +20,20 @@ project)
 
 ### FRONT END
 
-- React Js (workable with next js  at backend)
+- React JS
 - Tailwind CSS
 - Gatsby
 
 ## BACK END
 
 - Prisma
-- Node Js
-- Graph SQL
-- Apollo with express
-- Docker
+- Node JS
+- GraphQL
+- Apollo Server with express
 
 ## DATABASE
 
-- Postgres SQL
+- PostgreSQL
 - (anything if recommeded)
 - Redis
 
@@ -43,8 +42,7 @@ If you are developer who knows React JS to a reasonable level or Node JS with so
 ## What Will Be Made
 
 - Student Panel
-- Teacher Panel
-- School Admin Panel Based On Role
+- School Admin Employee panel Based On Role
 
 
 [premkumar5012002/School-Companion](https://github.com/premkumar5012002/School-Companion)
