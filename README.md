@@ -45,8 +45,3 @@ If you are developer who knows React JS to a reasonable level or Node JS with so
 - Student Panel
 - Teacher Panel
 - School Admin Panel Based On Role
-
-
-[premkumar5012002/School-Companion](https://github.com/premkumar5012002/School-Companion)
-
-[Join the makeOpenSource(); Discord Server!](https://discord.gg/HtdrUmxZVR)
